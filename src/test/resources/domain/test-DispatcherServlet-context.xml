@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<mvc:annotation-driven />
+	
+	<context:component-scan base-package="controller,service"></context:component-scan>
+	
+	<!-- in case no proxy use 'empty' string as a both property values -->
+	<bean class="domain.HttpProxyBean" id="httpProxyBean">
+		<constructor-arg type="java.lang.String" value="empty" />
+		<constructor-arg type="java.lang.String" value="empty" />
+	</bean>
+	
+	<bean class="com.squareup.okhttp.OkHttpClient" id="okHttpClient" />
+	
+	<bean class="org.codehaus.jackson.map.ObjectMapper" id="objectMapper" />
+	
+	<bean class="controller.GitHubRestController" id="gitHubRestController">
+		<constructor-arg type="java.lang.String" value="https://api.github.com/search/repositories" />
+	</bean>
+	
+	<bean class="service.GitHubRestService" id="gitHubRestService">
+		<constructor-arg ref="httpProxyBean" />
+		<constructor-arg ref="okHttpClient" />
+		<constructor-arg ref="objectMapper" />
+	</bean>
+
+</beans>
